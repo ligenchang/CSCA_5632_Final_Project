@@ -1,125 +1,92 @@
-# E-Commerce Customer Analytics & Prediction
+# Customer Segmentation and Recommendation Systems
+
+This is my coursework project for CSCA 5632 Unsupervised Algorithms. I applied unsupervised machine learning techniques to analyze e-commerce data and build customer insights.
 
 ## Project Overview
-E-commerce businesses face three major challenges:
 
-1. **Segmentation**: Identifying meaningful customer groups from complex transaction data  
-2. **Recommendations**: Delivering personalized cross-sell/upsell suggestions  
-3. **Prediction**: Accurately forecasting future purchases for marketing and inventory planning  
-
-This project addresses these challenges using multiple unsupervised machine learning approaches:
-
-- Customer segmentation with **RFM analysis + clustering**  
-- Personalized recommendations via **collaborative filtering**  
-- Purchase prediction using **Non-negative Matrix Factorization (NMF) + temporal modeling**
-
----
+The project focuses on three main areas:
+- Customer segmentation using clustering algorithms
+- Product recommendation using collaborative filtering
+- Sales forecasting using matrix factorization
 
 ## Dataset
 
-- **Source**: UCI Online Retail Dataset  
-- **Business Context**: UK-based gift retailer specializing in unique all-occasion gifts  
-- **Time Period**: December 2010 - December 2011  
+I used the UCI Online Retail Dataset which contains transactions from a UK-based online retailer specializing in gifts.
 
-**Dataset Statistics**
+- **Source**: https://archive.ics.uci.edu/dataset/352/online+retail
+- **Time period**: December 2010 - December 2011
+- **Size**: 541,909 transactions with 8 attributes
+- **Customers**: 4,312 unique customers after cleaning
+- **Products**: 4,444 unique products
 
-| Metric | Value |
-|--------|-------|
-| Original Transactions | 541,909 |
-| After Cleaning | 417,364 (23.7% reduction) |
-| Customers | 4,268 unique |
-| Products | 4,444 distinct |
-| Key Attributes | InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, Country |
+## Data Processing
 
-**Data Quality Improvements**
+The raw data required extensive cleaning:
+- Removed cancelled orders (invoices starting with 'C')
+- Filtered out negative quantities and prices
+- Dropped missing customer IDs
+- Removed duplicates
+- Final dataset: ~75% of original data retained
 
-- Removed cancellations and invalid transactions  
-- Handled missing CustomerIDs  
-- Outlier treatment (removed top 1% monetary extremes)  
-- Log transformation for skewed features  
-- StandardScaler normalization  
+## Methods Used
 
----
+### Customer Segmentation
+- **RFM Analysis**: Analyzed Recency, Frequency, and Monetary value
+- **PCA**: Reduced dimensionality to 2 components (explained 78% variance)
+- **Clustering**: Applied both K-Means and Agglomerative clustering
+- **Results**: Found 3 optimal clusters representing high-value, medium-value, and low-value customers
 
-## Methodology
+### Recommendation System
+- **Collaborative Filtering**: Implemented both user-based and item-based approaches
+- **Challenge**: 98.5% data sparsity made recommendations difficult
+- **Performance**: User-based CF (RMSE: 2.02) outperformed item-based CF (RMSE: 19.83)
 
-### 1. Data Processing Pipeline
-**RFM Feature Engineering**
+### Sales Forecasting
+- **NMF**: Applied Non-negative Matrix Factorization on customer-product-time tensor
+- **Approach**: Used linear forecasting on latent factors
+- **Hyperparameter tuning**: Tested 5-40 components, chose 20 for balance
 
-- **Recency**: Days since last purchase  
-- **Frequency**: Number of transactions per customer  
-- **Monetary**: Total spending per customer  
+## Key Findings
 
-**Transformations**
+1. **Customer Segments**: Three clear groups emerged
+   - High-value customers: Recent purchases, high frequency, high spending
+   - Medium-value customers: Moderate activity across all dimensions
+   - Low-value customers: Infrequent purchases, low spending
 
-- Log transformation  
-- StandardScaler normalization  
+2. **Algorithm Performance**:
+   - Agglomerative clustering (silhouette score: 0.41) slightly better than K-Means (0.39)
+   - User-based collaborative filtering much more effective than item-based
 
-**Dimensionality Reduction**
+3. **Data Quality**: Real-world e-commerce data is messy - extensive cleaning was crucial
 
-- PCA (3D → 2D, 89.6% variance retained)  
+## Technologies Used
 
-### 2. Customer Segmentation
-**Algorithms Tested**
+- Python
+- pandas, numpy for data processing
+- scikit-learn for machine learning
+- matplotlib, seaborn for visualization
+- Jupyter Notebook for analysis
 
-| Algorithm | Params | Silhouette Score |
-|-----------|--------|-----------------|
-| K-Means | k=3 | 0.390 |
-| Hierarchical | Ward linkage | 0.410 |
+## Files Structure
 
-**Customer Segments Identified**
+- `main.ipynb` - Complete analysis notebook with all code and results
+- Contains data loading, cleaning, EDA, clustering, recommendations, and forecasting
 
-- **Occasional Customers : Moderate purchasing behavior  
-- **High-Value Loyal : Frequent, high-spending customers  
-- **Inactive/At-Risk : Low engagement, low purchasing
+## What I Learned
 
-### 3. Recommendation System
-**Collaborative Filtering Approaches**
+The real word data is quite messy. The biggest challenge was handling the high sparsity in the recommendation system. I learned that:
+- Data preprocessing is more important than I initially thought
+- Different clustering algorithms can reveal different patterns
+- Visualization is crucial for understanding algorithm behavior
+- Real-world datasets require lots of cleaning before analysis
 
-- **User-Based CF**: Find similar customers using cosine similarity  
-- **Item-Based CF**: Recommend products similar to purchased items  
+## Next Steps
 
-**Benefits**
+- Explore tensor factorization techniques for better forecasting
+- Try different similarity metrics for collaborative filtering
+- Experiment with hybrid recommendation approaches
+- Optimize threshold selection for NMF predictions
 
-- Handles sparse customer-product matrices effectively  
-- Generates personalized recommendations for cross-sell/upsell  
+## Reference
 
-### 4. Purchase Prediction
-**NMF-Based Forecasting**
-
-- Construct **3D tensor** (products × customers × months)  
-- **NMF decomposition** with 15 latent factors  
-- **Linear trend forecasting** of latent factors  
-- Binary purchase prediction with threshold application  
-
----
-
-## Results
-
-### Customer Segmentation Performance
-
-| Algorithm | Silhouette Score | Cluster Distribution | Strengths |
-|-----------|-----------------|-------------------|-----------|
-| K-Means | 0.390 | 21.8% / 36.8% / 41.4% | Fast, balanced clusters |
-| Hierarchical | 0.410 | 48.9% / 25.7% / 25.4% | Reveals relationships |
-
-**Business Impact**
-
-- 1,085 at-risk customers identified for re-engagement campaigns  
-- 1,097 high-value customers for premium retention strategies  
-- Personalized recommendations enable targeted cross-sell/upsell  
-- Predictive insights support proactive inventory and marketing planning  
-
----
-
-## Key Takeaways
-
-1. **Customer segmentation drives targeted action**  
-   - 25.4% of customers are at churn risk and need immediate re-engagement  
-   - 25.7% are high-value loyal customers requiring premium treatment  
-
-2. **Collaborative filtering enables personalized recommendations**  
-   - Dual approach system generates targeted product suggestions using both customer similarity and item relationships  
-
-3. **Predictive modeling transforms business planning**  
-   - NMF forecasting predicts future purchase probabilities, enabling proactive inventory management and revenue planning
+Based on the NMF forecasting approach from: https://www.jstage.jst.go.jp/article/ipsjjip/27/0/27_752/_pdf
