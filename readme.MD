@@ -19,7 +19,6 @@ By exploring these patterns, I aim to demonstrate how data-driven insights can i
 - Source: https://archive.ics.uci.edu/dataset/352/online+retail  
 - Business Context: Transactions from a UK-based online retailer specializing in gifts, including both individual and wholesale customers.  
 - Timeframe: December 2010 – December 2011  
-- Size: 541,909 transactions, 8 attributes  
 - Customers: 4,312 unique customers after cleaning  
 - Products: 4,444 unique products  
 
